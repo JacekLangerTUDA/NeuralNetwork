@@ -56,7 +56,14 @@ class NeuralNetwork:
         out = np.dot(self.who, hid_out)
         self.final_out = sig(out)
         print(f"expected {lbl}")
-        print(f"actual: {out}")
+        a = -1
+        index = -1
+        for i in out:
+            if a < out[i]:
+                a = out[i]
+                index = i
+
+        print(f"actual: {index}")
 
     def train(self, target, inp, learningrate):
         # calculate the hidden layer
