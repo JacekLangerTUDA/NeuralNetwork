@@ -31,15 +31,15 @@ def label(index):
 
 class NeuralNetwork:
 
-    def __init__(self, who, whi, gen: int):
+    def __init__(self, who, whi):
         self.final_out = None
         self.who = who
         self.whi = whi
 
-    def evolve(self, gen):
+    def evolve(self, gen, learningrate=.1):
         for i in range(gen):
             for i in range(TOTAL_IMAGE_COUNT):
-                r = ran.randint(0, 59999)
+                r = ran.randint(0, TOTAL_IMAGE_COUNT - 1)
                 lbl = label(r)
                 inp = image(r)
 
@@ -47,7 +47,7 @@ class NeuralNetwork:
                 tar = np.array([0] * 10, ndmin=2).T
                 tar[lbl] = 1
 
-                self.train(tar, inp, .1)
+                self.train(tar, inp, learningrate)
 
     def eval(self, inp, lbl):
         # calculate the hidden layer
@@ -112,13 +112,12 @@ if __name__ == '__main__':
         whi = np.random.random((89, 784)) * .1
         who = np.random.random((10, 89)) * .1
     net = NeuralNetwork(
-        gen=1,
         whi=whi,
         who=who)
     start = dt.now()
-    net.evolve(1)
+    net.evolve(gen=5)
     end = dt.now()
-    r = ran.randint(0, 59999)
+    r = ran.randint(0, TOTAL_IMAGE_COUNT - 1)
     net.eval(image(r), label(r))
     print(f"duration {end - start}")
     save(net.whi, net.who)
